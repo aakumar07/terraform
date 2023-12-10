@@ -10,6 +10,7 @@ resource "aws_vpc" "myvpc" {
 }
 resource "aws_subnet" "awspubsub" {
     vpc_id = aws_vpc.myvpc.id
+    availability_zone = "us-east-2a"
     cidr_block = var.awspubsub_cidr
     tags = {
         Name = "awspubsub"
@@ -42,27 +43,26 @@ resource "aws_route_table_association" "publicsubmet"{
 resource "aws_s3_bucket" "s3_bucket"{
     bucket = "myblks13"
 }
-
-resource "aws_instance" "myins" {
+resource "aws_instance" "this" {
     ami = var.ami_id
-    instance_type = var.instance_type_id
+    instance_type = var.instance_type
     subnet_id = aws_subnet.awspubsub.id
-    security_groups = [aws_security_group.sg.name]
+
     tags = {
-      Name = "myins"
+      Name = "this"
     }
 }
-resource "aws_key_pair" "mykey" {
-  key_name   = "mykey"
-  public_key = "tls_private_key.rsa.public_key_openssh"
+resource "aws_key_pair" "TF_key" {
+  key_name   = "TF_key"
+  public_key = tls_private_key.rsa.public_key_openssh
 }
 resource "tls_private_key" "rsa" {
   algorithm = "RSA"
   rsa_bits  = 4096
 }
-resource "local_file" "key" {
-  content  = "tls_private_key.rsa.private_key_pem"
-  filename = "key"
+resource "local_file" "TF_key" {
+  content  = tls_private_key.rsa.private_key_pem
+  filename = "tfkey"
 }
 
 resource "aws_security_group" "sg" {
@@ -75,8 +75,6 @@ resource "aws_security_group" "sg" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = [0.0.0.0/0]
-    ipv6_cidr_blocks = ["::/0"]
   }
 
   ingress {
@@ -84,8 +82,6 @@ resource "aws_security_group" "sg" {
     from_port        = 80
     to_port          = 80
     protocol         = "tcp"
-    cidr_blocks      = [0.0.0.0/0]
-    ipv6_cidr_blocks = ["::/0"]
   }
 
   egress {

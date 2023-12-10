@@ -48,6 +48,9 @@ resource "aws_instance" "myins" {
     instance_type = var.instance_type_id
     subnet_id = aws_subnet.awspubsub.id
     security_groups = [aws_security_group.sg.name]
+    tags = {
+      Name = "myins"
+    }
 }
 resource "aws_key_pair" "mykey" {
   key_name   = "mykey"

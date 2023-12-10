@@ -47,7 +47,7 @@ resource "aws_instance" "myins" {
     ami = var.ami_id
     instance_type = var.instance_type_id
     subnet_id = aws_subnet.awspubsub.id
-    security_group = [aws_security_group.sg.name]
+    security_groups = [aws_security_group.sg.name]
 }
 resource "aws_key_pair" "mykey" {
   key_name   = "mykey"

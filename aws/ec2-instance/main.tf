@@ -45,7 +45,7 @@ resource "aws_s3_bucket" "s3_bucket"{
 
 resource "aws_instance" "myins" {
     ami = var.ami_id
-    insance_type = var.insance_type_id
+    instance_type = var.instance_type_id
     subnet_id = aws_subnet.awspubsub.id
     security_group = [aws_security_group.sg.name]
 }

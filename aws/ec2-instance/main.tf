@@ -43,7 +43,7 @@ resource "aws_s3_bucket" "s3_bucket"{
     bucket = "myblks13"
 }
 
-resource "aws-instance" "myins" {
+resource "aws_instance" "myins" {
     ami = var.ami_id
     insance_type = var.insance_type_id
     subnet_id = aws_subnet.awspubsub.id
